@@ -82,8 +82,14 @@ To enhance performance and reduce reliance on external APIs, this application im
     •Faster response times for frequently requested cities.
     •Reduced number of calls to external services, helping to stay within API rate limits and reducing external dependencies.
 
+## API Flow
+1. **City Input**: The user provides a city name to the API.
+2. **Geocoding**: The application uses OpenStreetMap's Nominatim API to convert the city name into geographic coordinates (latitude and longitude).
+3. **Weather Fetch**: The coordinates are used to query the MET Norway (yr.no) Locationforecast API for current weather data.
+4. **Response Formatting**: The raw weather data is parsed and formatted into a simplified, user-friendly JSON structure and returned to the client.
+
 ## Response
-ResponseThe API will respond with a JSON object containing the following fields:
+The API will respond with a JSON object containing the following fields:
 * city (String): The name of the city for which the forecast was requested (capitalized).
 * •temperature (String, nullable): The current air temperature (e.g., "14.0 °C"). Can be "N/A" if data is unavailable.
 * •wind (String, nullable): The current wind speed (e.g., "1.7 m/s"). Can be "N/A" if data is unavailable.
@@ -101,3 +107,18 @@ different forecast periods), you'll generally need to follow these steps:
     * Assign it to the new field in the WeatherForecastResponse object you are constructing.
 
 By following these steps, you can customize the API response to include more detailed weather information as needed.
+
+## Implementation Status
+✅ Geocoding via OpenStreetMap Nominatim  
+✅ Weather data integration with MET Norway Locationforecast API
+✅ Custom response formatting with temperature, wind, and weather description  
+✅ Basic error handling for failed or empty API results  
+🟡 Caching (not implemented)  
+🟡 Unit tests (not implemented)  
+
+## Reflections
+This project was completed as part of a coding challenge with a focus on integrating third-party APIs and delivering clean, readable Kotlin code. 
+Although I am a junior developer, I aimed to follow professional standards, clear project structuring, and preparation for modularization using Gradle's version catalog.
+
+Given the time constraints, I prioritized functionality and clarity over architectural complexity. If more time were available, I would add caching, unit testing, and consider modular separation. 
+I look forward to discussing these choices during the interview.

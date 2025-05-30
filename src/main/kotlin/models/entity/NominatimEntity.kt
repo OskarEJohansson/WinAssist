@@ -6,3 +6,4 @@ import kotlinx.serialization.Serializable
 data class NominatimEntity(
     val lat: String? = null,
     val lon: String? = null)
+}

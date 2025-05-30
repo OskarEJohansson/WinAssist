@@ -24,8 +24,9 @@ class WeatherForecastService(private val jedis: RedisCacheService, private val c
         companion object {
             private const val COORDINATES_NAMESPACE = "coordinates"
             private const val WEATHER_NAMESPACE = "weatherForecast"
-        }
-
+          
+    class WeatherHelperService(private val nominateUrl: String){
+  
         suspend fun getLocation(city: String): Coordinates {
             findCoordinatesInCache(COORDINATES_NAMESPACE, city)?.let { return it }
             val entities = api.fetchCoordinates(city)
