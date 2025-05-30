@@ -6,7 +6,7 @@ import io.ktor.http.*
 import io.ktor.server.plugins.*
 import kotlinx.serialization.SerializationException
 import models.core.Coordinates
-import models.entity.NominatimResult
+import models.entity.NominatimEntity
 import models.entity.WeatherForecastEntity
 import network.KtorClientProvider
 
@@ -35,7 +35,7 @@ class WeatherForecastService(nominateUrl: String ) {
                }
 
                if(result.status.isSuccess()){
-                   val result = result.body<List<NominatimResult>>()
+                   val result = result.body<List<NominatimEntity>>()
                    Coordinates(result[0].lat?.toDouble(), result[0].lon?.toDouble())
 
                } else {
