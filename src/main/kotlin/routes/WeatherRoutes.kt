@@ -1,17 +1,16 @@
 package routes
 
 import controller.WeatherController
-import io.ktor.server.request.*
+import io.ktor.server.plugins.*
 import io.ktor.server.routing.*
 import io.ktor.util.reflect.*
-import models.request.WeatherForecastRequest
 import models.response.WeatherForecastResponse
 
-fun Route.weatherApiRoutes(weatherController: WeatherController){
+fun Route.weatherApiRoutes(weatherController: WeatherController) {
     route("/api/v1/weather") {
-        get("/forecast") {
-            val request = call.receive<WeatherForecastRequest>()
-            val forecastResponse = weatherController.getWeatherForecast(request)
+        get("/forecast/{city}") {
+            val city = call.parameters["city"] ?: throw BadRequestException("Missing city")
+            val forecastResponse = weatherController.getWeatherForecast(city)
             call.respond(message = forecastResponse, typeInfo<WeatherForecastResponse>())
         }
     }
