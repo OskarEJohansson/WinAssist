@@ -17,9 +17,8 @@ fun List<NominatimEntity>.toCoordinates(): Coordinates? {
     val first = firstOrNull() ?: return null
     val lat = first.lat?.toDoubleOrNull()
     val lon = first.lon?.toDoubleOrNull()
-
     if (lat == null || lon == null) {
-        println("Invalid lat/lon: lat='${first.lat}', lon='${first.lon}'")
+        ("Invalid lat/lon: lat='${first.lat}', lon='${first.lon}'")
         return null
     }
 

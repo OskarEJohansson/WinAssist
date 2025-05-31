@@ -11,7 +11,7 @@ import utils.findCache
 import utils.setCache
 
 
-class WeatherForecastService(private val jedis: RedisCacheService, private val coder: Json, private val api: WeatherApiClient) {
+class WeatherForecastService(jedis: RedisCacheService,coder: Json, api: WeatherApiClient) {
 
     private val helperService = WeatherHelperService(jedis, coder, api)
 
@@ -24,31 +24,27 @@ class WeatherForecastService(private val jedis: RedisCacheService, private val c
         companion object {
             private const val COORDINATES_NAMESPACE = "coordinates"
             private const val WEATHER_NAMESPACE = "weatherForecast"
-          
-    class WeatherHelperService(private val nominateUrl: String){
-  
-        suspend fun getLocation(city: String): Coordinates {
-            findCoordinatesInCache(COORDINATES_NAMESPACE, city)?.let { return it }
-            val entities = api.fetchCoordinates(city)
-            jedis.setCache(coder, COORDINATES_NAMESPACE, city, entities,)
-            return entities.toCoordinates() ?: throw NotFoundException("Location: $city could not be serialized")
         }
+                suspend fun getLocation(city: String): Coordinates {
+                    findCoordinatesInCache(COORDINATES_NAMESPACE, city)?.let { return it }
+                    val entities = api.fetchCoordinates(city)
+                    jedis.setCache(coder, COORDINATES_NAMESPACE, city, entities,)
 
-        suspend fun getWeather(city: String, coordinates: Coordinates): WeatherForecastEntity {
-            findWeatherForecastInCache(WEATHER_NAMESPACE, city)?.let { return it }
-            val weather = api.fetchForecast(coordinates)
-            jedis.setCache(coder, WEATHER_NAMESPACE, city, weather)
-            return weather
-        }
+                    return entities.toCoordinates() ?: throw NotFoundException("Location: $city coordinates could not be found")
+                }
 
-        fun findCoordinatesInCache(namespace: String, city: String): Coordinates? =
-            jedis.findCache<List<NominatimEntity>, Coordinates?>(coder, namespace, city) { it.toCoordinates() }
+                suspend fun getWeather(city: String, coordinates: Coordinates): WeatherForecastEntity {
+                    findWeatherForecastInCache(WEATHER_NAMESPACE, city)?.let { return it }
+                    val weather = api.fetchForecast(coordinates)
 
-        fun findWeatherForecastInCache(namespace: String, city: String): WeatherForecastEntity? =
-            jedis.findCache(coder, namespace, city)
-    }
+                    jedis.setCache(coder, WEATHER_NAMESPACE, city, weather)
+                    return weather
+                }
+
+                fun findCoordinatesInCache(namespace: String, city: String): Coordinates? =
+                    jedis.findCache<List<NominatimEntity>, Coordinates?>(coder, namespace, city) { it.toCoordinates() }
+
+                fun findWeatherForecastInCache(namespace: String, city: String): WeatherForecastEntity? = jedis.findCache(coder, namespace, city)
+            }
+
 }
-
-
-
-
