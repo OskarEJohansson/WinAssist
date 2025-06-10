@@ -22,7 +22,7 @@ The application uses Redis for caching API responses. For local development, you
 2.  Run the Redis container:
     docker run -d --name dev-redis -p 6379:6379 redis
 
-This command starts a Redis container named `dev-redis` in detached mode (`-d`) and maps port `6379` of the container to port `6379` on your host machine. The application is configured to connect to Redis on `localhost:6379` by default (see `network.providers.RedisClientProvider`).
+This command starts a Redis container named `dev-redis` in detached mode (`-d`) and maps port `6379` of the container to port `6379` on your host machine. The application is configured to connect to Redis on `localhost:6379` by default (see `integration.providers.RedisClientProvider`).
 
     You can check if the container is running with `docker ps`. To stop the container, use `docker stop dev-redis`.
 
@@ -99,10 +99,10 @@ The API will respond with a JSON object containing the following fields:
 If you wish to add more fields to the API response (e.g., humidity, pressure, 
 different forecast periods), you'll generally need to follow these steps:
 
-1. Identify the Data in WeatherForecastEntity.kt: The models.entity.WeatherForecastEntity class (and its nested classes) represents the full data structure fetched from the external MET Norway API. Locate the specific data point you want to include (e.g., relativeHumidity within WeatherForecastEntity.Details). Ensure this data is being correctly deserialized from the API (check @SerialName annotations and nullability).
+1. Identify the Data in WeatherForecastDTO.kt: The models.dto.WeatherForecastDTO class (and its nested classes) represents the full data structure fetched from the external MET Norway API. Locate the specific data point you want to include (e.g., relativeHumidity within WeatherForecastEntity.Details). Ensure this data is being correctly deserialized from the API (check @SerialName annotations and nullability).
 2. Add the Field to WeatherForecastResponse.kt: Modify the models.response.WeatherForecastResponse data class to include your new field with the desired name and type.
 3. Update the Translator in translators.kt: The models.translators.translators.kt file contains the extension function WeatherForecastEntity.toResponse(). You need to update this function to:
-    * Extract the desired data from the WeatherForecastEntity instance.
+    * Extract the desired data from the WeatherForecastDTO instance.
     * Format it if necessary (e.g., adding units, converting to a string).
     * Assign it to the new field in the WeatherForecastResponse object you are constructing.
 

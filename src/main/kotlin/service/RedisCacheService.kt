@@ -1,6 +1,6 @@
 package service
 
-import network.providers.RedisClientProvider.jedis
+import integration.providers.RedisClientProvider.jedis
 
 object RedisCacheService {
 

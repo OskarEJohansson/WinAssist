@@ -13,7 +13,6 @@ version = '1.0-SNAPSHOT'
 
 
 dependencies {
-    implementation(libs.ktor.server.caching.headers)
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.content.negotiation)
     implementation(libs.ktor.server.cors)
@@ -28,12 +27,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.redis.client.jedis)
     implementation(libs.slf4j.simple)
-    implementation 'com.ucasoft.ktor:ktor-simple-cache:0.53.4'
-    implementation 'io.ktor:ktor-server-core:3.1.1'
-    implementation 'io.ktor:ktor-server-core:3.1.1'
-    implementation 'com.ucasoft.ktor:ktor-simple-memory-cache:0.53.4'
-    implementation 'com.ucasoft.ktor:ktor-simple-cache:0.53.4'
-    implementation 'io.ktor:ktor-server-core:3.1.1'
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlin.test.junit)
 }

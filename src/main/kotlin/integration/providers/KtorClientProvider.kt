@@ -1,4 +1,4 @@
-package network.providers
+package integration.providers
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*

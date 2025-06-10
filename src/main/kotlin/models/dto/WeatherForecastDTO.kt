@@ -1,10 +1,10 @@
-package models.entity
+package models.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class WeatherForecastEntity(
+data class WeatherForecastDTO(
     val type: String?,
     val geometry: Geometry?,
     val properties: Properties?)

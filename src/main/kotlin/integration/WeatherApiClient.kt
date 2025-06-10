@@ -1,20 +1,20 @@
-package network
+package integration
 
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.server.plugins.*
 import models.core.Coordinates
-import models.entity.NominatimEntity
-import models.entity.WeatherForecastEntity
-import network.providers.KtorClientProvider
+import models.dto.NominatimDTO
+import models.dto.WeatherForecastDTO
+import integration.providers.KtorClientProvider
 
 
 class WeatherApiClient(ktorClientProvider: KtorClientProvider) {
 
     val client = ktorClientProvider.client
 
-    suspend fun fetchForecast(coordinates: Coordinates): WeatherForecastEntity {
+    suspend fun fetchForecast(coordinates: Coordinates): WeatherForecastDTO {
         val response = client.get("https://api.met.no/weatherapi/locationforecast/2.0/compact") {
             url {
                 contentType(ContentType.Application.Json)
@@ -29,7 +29,7 @@ class WeatherApiClient(ktorClientProvider: KtorClientProvider) {
         return response.body()
     }
 
-    suspend fun fetchCoordinates(city: String): List<NominatimEntity> {
+    suspend fun fetchCoordinates(city: String): List<NominatimDTO> {
         val response = client.get("https://nominatim.openstreetmap.org/search") {
             url {
                 contentType(ContentType.Application.Json)
@@ -44,7 +44,7 @@ class WeatherApiClient(ktorClientProvider: KtorClientProvider) {
         }
 
         val entities = try {
-            response.body<List<NominatimEntity>>()
+            response.body<List<NominatimDTO>>()
         } catch (e: Exception) {
             throw BadRequestException("Could not parse location for $city: ${e.message}")
         }

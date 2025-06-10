@@ -2,22 +2,19 @@ package config
 
 import coder.JsonCoder
 import controller.WeatherController
+import integration.WeatherApiClient
+import integration.providers.KtorClientProvider
 import io.ktor.http.*
-import io.ktor.http.content.CachingOptions
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
-import io.ktor.server.plugins.cachingheaders.CachingHeaders
-import io.ktor.server.plugins.calllogging.CallLogging
+import io.ktor.server.plugins.calllogging.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.request.httpMethod
-import io.ktor.server.request.path
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
-import network.WeatherApiClient
-import network.providers.KtorClientProvider
 import org.slf4j.event.Level
 import routes.weatherApiRoutes
 import service.RedisCacheService
@@ -46,9 +43,6 @@ fun Application.module() {
         }
     }
 
-    install(CachingHeaders) {
-        options { call, content -> CachingOptions(CacheControl.MaxAge(maxAgeSeconds = 1800)) }
-    }
     install(StatusPages) {
         exception<BadRequestException> { call, cause ->
             call.respondText(text = "400: ${cause.message}", status = HttpStatusCode.BadRequest)

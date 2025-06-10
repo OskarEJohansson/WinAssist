@@ -1,4 +1,4 @@
-package network.providers
+package integration.providers
 
 import redis.clients.jedis.Jedis
 
