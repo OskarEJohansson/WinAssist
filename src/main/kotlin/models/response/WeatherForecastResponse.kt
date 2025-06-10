@@ -2,7 +2,6 @@ package models.response
 
 import kotlinx.serialization.Serializable
 
-
 @Serializable
 data class WeatherForecastResponse(
     val city: String,
