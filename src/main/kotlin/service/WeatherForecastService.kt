@@ -7,13 +7,16 @@ import models.dto.NominatimDTO
 import models.dto.WeatherForecastDTO
 import models.translators.toDomain
 import integration.WeatherApiClient
+import org.slf4j.LoggerFactory
 import utils.findCache
 import utils.setCache
 
 
 class WeatherForecastService(jedis: RedisCacheService,coder: Json, api: WeatherApiClient) {
 
+
     private val helperService = WeatherHelperService(jedis, coder, api)
+
 
     suspend fun getWeatherForecast(city: String): WeatherForecastDTO {
         val coordinates: Coordinates = helperService.getLocation(city)
@@ -22,21 +25,26 @@ class WeatherForecastService(jedis: RedisCacheService,coder: Json, api: WeatherA
 
     class WeatherHelperService(private val jedis: RedisCacheService, private val coder: Json, private val api: WeatherApiClient) {
         companion object {
+            private val LOG = LoggerFactory.getLogger(WeatherForecastService::class.java)
             private const val COORDINATES_NAMESPACE = "coordinates"
             private const val WEATHER_NAMESPACE = "weatherForecast"
         }
                 suspend fun getLocation(city: String): Coordinates {
-                    findCoordinatesInCache(COORDINATES_NAMESPACE, city)?.let { return it }
+                    findCoordinatesInCache(COORDINATES_NAMESPACE, city)?.let {
+                        LOG.info("Cache found for $city with coordinates $it")
+                        return it
+                    }
                     val coordinates = api.fetchCoordinates(city)
-                    jedis.setCache(coder, COORDINATES_NAMESPACE, city, coordinates,)
+                    jedis.setCache(coder, COORDINATES_NAMESPACE, city, coordinates)
 
                     return coordinates.toDomain() ?: throw NotFoundException("Location: $city coordinates could not be found")
                 }
 
                 suspend fun getWeather(city: String, coordinates: Coordinates): WeatherForecastDTO {
-                    findWeatherForecastInCache(WEATHER_NAMESPACE, city)?.let { return it }
+                    findWeatherForecastInCache(WEATHER_NAMESPACE, city)?.let {
+                        LOG.info("Cache found for $city with weather forecast: $it")
+                        return it }
                     val weather = api.fetchForecast(coordinates)
-
                     jedis.setCache(coder, WEATHER_NAMESPACE, city, weather)
                     return weather
                 }
