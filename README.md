@@ -113,12 +113,12 @@ By following these steps, you can customize the API response to include more det
 ✅ Weather data integration with MET Norway Locationforecast API
 ✅ Custom response formatting with temperature, wind, and weather description  
 ✅ Basic error handling for failed or empty API results  
-🟡 Caching (not implemented)  
+✅ Caching   
 🟡 Unit tests (not implemented)  
 
 ## Reflections
 This project was completed as part of a coding challenge with a focus on integrating third-party APIs and delivering clean, readable Kotlin code. 
 Although I am a junior developer, I aimed to follow professional standards, clear project structuring, and preparation for modularization using Gradle's version catalog.
 
-Given the time constraints, I prioritized functionality and clarity over architectural complexity. If more time were available, I would add caching, unit testing, and consider modular separation. 
+Given the time constraints, I prioritized functionality and exploring Redis caching. If I had more time to finish the task, I would add unit testing and consider modular separation. 
 I look forward to discussing these choices during the interview.

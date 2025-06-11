@@ -4,7 +4,10 @@ import models.core.Coordinates
 import models.dto.NominatimDTO
 import models.dto.WeatherForecastDTO
 import models.response.WeatherForecastResponse
+import org.slf4j.LoggerFactory
 
+
+private val LOG = LoggerFactory.getLogger(List::class.java)
 
 fun WeatherForecastDTO.toResponse(city: String) = WeatherForecastResponse(
     city = city.replaceFirstChar { it.uppercase() },
@@ -18,7 +21,7 @@ fun List<NominatimDTO>.toDomain(): Coordinates? {
     val lat = first.lat?.toDoubleOrNull()
     val lon = first.lon?.toDoubleOrNull()
     if (lat == null || lon == null) {
-        ("Invalid lat/lon: lat='${first.lat}', lon='${first.lon}'")
+        LOG.error("Invalid lat/lon: lat='${first.lat}', lon='${first.lon}'")
         return null
     }
 

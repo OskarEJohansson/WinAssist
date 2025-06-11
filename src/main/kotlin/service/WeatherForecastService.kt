@@ -7,6 +7,7 @@ import models.dto.NominatimDTO
 import models.dto.WeatherForecastDTO
 import models.translators.toDomain
 import integration.WeatherApiClient
+import models.translators.toResponse
 import org.slf4j.LoggerFactory
 import utils.findCache
 import utils.setCache
@@ -42,7 +43,7 @@ class WeatherForecastService(jedis: RedisCacheService,coder: Json, api: WeatherA
 
                 suspend fun getWeather(city: String, coordinates: Coordinates): WeatherForecastDTO {
                     findWeatherForecastInCache(WEATHER_NAMESPACE, city)?.let {
-                        LOG.info("Cache found for $city with weather forecast: $it")
+                        LOG.info("Cache found for $city with weather forecast: ${it.toResponse(city)}")
                         return it }
                     val weather = api.fetchForecast(coordinates)
                     jedis.setCache(coder, WEATHER_NAMESPACE, city, weather)
